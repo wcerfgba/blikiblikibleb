@@ -1,0 +1,11 @@
+ILoader = {
+  load: 'function ( module : IModuleName, cb : Callback(ILoadResult) ) : void {}',
+  // Somehow find the code for a module by name and load it into the global
+  // namespace. Return an interface-specific result/status value.
+};
+
+ILoadResult = any;
+// No restriction on result type.
+
+IModuleName = any;
+// No restriction on module names.

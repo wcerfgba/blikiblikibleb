@@ -1,0 +1,12 @@
+{
+	"BlikiBlikiBleb": {
+		"source":	"implementations/BlikiBlikiBleb.js",
+		"requires":	[
+			"XHRUtils"
+		]
+	},
+	"XHRUtils": {
+		"source": "implementations/XHRUtils.js",
+		"requires": []
+	}
+}
