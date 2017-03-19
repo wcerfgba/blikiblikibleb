@@ -1,0 +1,7 @@
+{
+	"BlikiBlikiBleb":	{
+		"req":	"UrlFragmentListener",
+		"repo:	"BlikiBlikiPageRepo",
+		"v":		"BlikiBlikiDOMView"
+	}
+}

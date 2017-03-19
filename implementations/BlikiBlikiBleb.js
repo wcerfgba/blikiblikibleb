@@ -1,51 +1,41 @@
+IBlikiBlikiBleb = {
+
+	_is: [
+  	'IInitiable',
+  	'IPrefixing',
+	],
+
+	_uses: {
+  	req: 'IListener',
+		repo:	'IRepository',
+  	v: 'IView',
+	},
+
+};
+
+
 BlikiBlikiBleb = (function () {
-	var _this = {
+  var _this = {
 
-		init: function () {
+		prefix: function () { return 'blikiblikibleb_'; },
 
-			_this.injectDOMRoot();
-			_this.bindFragmentListener();
-			window.location.hash = 'index';
+		init:	function () {
+
+  		_this.v.init();
   		
-		},
-
-		injectDOMRoot: function () {
-  		var d = document.createElement('div');
-  		d.id = 'blikiblikibleb';
-  		document.body.appendChild(d);
-		},
-
-		getDOMRoot: function () {
-  		return document.getElementById('blikiblikibleb');
-		},
-
-		bindFragmentListener: function () {
-
-			_this.oldFragment = undefined;
-
-			setInterval(function () {
-  			var newFragment = _this.getFragment();
-  			if ( _this.oldFragment !== newFragment ) {
-    			_this.visit( newFragment );
-    			_this.oldFragment = newFragment;
-  			}
-			}, 1000);
+  		_this.req.onchange(_this.visit);
 
 		},
 
-		visit: function (path) {
+		visit: function (id) {
 
-  		XHRUtils.get('assets/pages/' + path + '.md', function (text) {
-    		_this.getDOMRoot().innerHTML = text;
+  		_this.repo.get(id, function (content) {
+    		_this.v.set( content );
   		});
 
 		},
 
-		getFragment: function () {
-  		return window.location.hash.substr(1);
-		},
+  };
 
-	};
-
-	return _this;
+  return _this;
 })();
