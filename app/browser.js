@@ -12,7 +12,7 @@ let PromiseListener = require('../src/Utilities/PromiseListener.js');
 // Local dependencies
 let Router = require('../src/Router/UrlFragmentListener');
 let XhrRepository = require('../src/Repository/XhrRepository');
-let renderer = require('../src/Renderer/MarkdownRenderer');
+let renderer = require('../src/Renderer/BlikiBlikiMarkdownRenderer');
 let DomContainerView = require('../src/View/DomContainerView');
 
 
