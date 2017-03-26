@@ -1,0 +1,25 @@
+{
+  "name": "blikiblikibleb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/server.js",
+  "scripts": {
+    "test": "mocha",
+    "build": "browserify app/browser.js -o dist/browser.js",
+    "watch": "watchify app/browser.js -o dist/browser.js --debug --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wcerfgba/blikiblikibleb.git"
+  },
+  "author": "wcerfgba",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wcerfgba/blikiblikibleb/issues"
+  },
+  "homepage": "https://github.com/wcerfgba/blikiblikibleb#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "marked": "^0.3.6"
+  }
+}
