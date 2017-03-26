@@ -18,7 +18,7 @@ let DomContainerView = require('../src/View/DomContainerView');
 
 // App components
 let router = new Router();
-let repository = new XhrRepository( (name) => `/assets/pages/${name}.md` );
+let repository = new XhrRepository( (name) => `assets/pages/${name}.md` );
 let view = new DomContainerView('blikiblikibleb');
 
 
