@@ -25,9 +25,9 @@ let view = new DomContainerView('blikiblikibleb');
 // The app, as a decorator of promises.
 // Methods are wrapped in functions to preserve object ownership.
 let app = (p) => {
-	return p.then( (name) => repository.retrieve(name) )
-					.then( (doc) => renderer.render(doc) )
-					.then( (render) => view.setContent(render) );
+  return p.then( (name) => repository.retrieve(name) )
+          .then( (doc) => renderer.render(doc) )
+          .then( (render) => view.setContent(render) );
 }
 
 
@@ -37,10 +37,10 @@ view.install();
 
 // Subscribe to route change promises.
 let listener =
-	new PromiseListener(
-		() => router.onRouteChange(),
-		app
-	);
+  new PromiseListener(
+    () => router.onRouteChange(),
+    app
+  );
 
 
 // Load the index.

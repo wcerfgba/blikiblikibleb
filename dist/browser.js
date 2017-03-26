@@ -6950,7 +6950,7 @@ function escape(html, encode) {
 }
 
 function unescape(html) {
-	// explicitly match decimal, hex, and named HTML entities 
+  // explicitly match decimal, hex, and named HTML entities 
   return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';
@@ -7169,17 +7169,17 @@ class XhrRepository {
     let _this = this;
     
     return new Promise( function retrievePromise(resolve, reject, onCancel) {
-    	var req = new XMLHttpRequest();
-    	req.addEventListener(
-    		'load',
-    		function () {
-      		return resolve(this.responseText);
-      	}
+      var req = new XMLHttpRequest();
+      req.addEventListener(
+        'load',
+        function () {
+          return resolve(this.responseText);
+        }
       );
       // Transform document name into URL.
-    	req.open("GET", _this.nameFilter(name));
-    	req.send();
-  	});
+      req.open("GET", _this.nameFilter(name));
+      req.send();
+    });
   }
 
 }
@@ -7200,36 +7200,36 @@ let Promise = require('bluebird');
 
 class UrlFragmentListener {
 
-	constructor(fragmentChangeInterval = 200) {
-  	this.fragmentChangeInterval = fragmentChangeInterval;
-	}
+  constructor(fragmentChangeInterval = 200) {
+    this.fragmentChangeInterval = fragmentChangeInterval;
+  }
   
   getFragment() {
     return window.location.hash.substr(1);
   }
 
-	/* Return a promise which resolves when the fragment changes. Store the
-	 * fragment at creation time and poll for changes, resolving on change.
-	 */
+  /* Return a promise which resolves when the fragment changes. Store the
+   * fragment at creation time and poll for changes, resolving on change.
+   */
   onFragmentChange() {
     return new Promise( (resolve, reject) => {
       let prev = this.getFragment();
       let timer = setInterval( () => {
-      	let curr = this.getFragment();
-      	if ( prev !== curr ) {
-        	// When we detect a fragment change, we can clear this timeout as
-        	// there is no need to watch the URL fragment any more, and resolve
-        	// the promise with the value.
-        	clearTimeout(timer);
-        	resolve(curr);
-      	}
+        let curr = this.getFragment();
+        if ( prev !== curr ) {
+          // When we detect a fragment change, we can clear this timeout as
+          // there is no need to watch the URL fragment any more, and resolve
+          // the promise with the value.
+          clearTimeout(timer);
+          resolve(curr);
+        }
       }, this.fragmentChangeInterval);
-  	});
-	}
+    });
+  }
 
-	getRoute() { return this.getFragment(); }
+  getRoute() { return this.getFragment(); }
 
-	onRouteChange() { return this.onFragmentChange(); }
+  onRouteChange() { return this.onFragmentChange(); }
 
 }
 
@@ -7259,8 +7259,8 @@ class PromiseListener {
     
     this.ps = [
       this.promiseFilter(
-      	this.promiseFactory()
-      			.then(this.listen(0))
+        this.promiseFactory()
+            .then(this.listen(0))
       ),
       Promise.resolve()
     ];
@@ -7273,16 +7273,16 @@ class PromiseListener {
   listen(i) {
     let _this = this;
     
-		return function listener(v) {
-  		_this.ps[1 - i].cancel();
-  		_this.ps[1 - i] =
-  			_this.promiseFilter(
-  				_this.promiseFactory()
-  						.then(_this.listen(1 - i))
-  			);
+    return function listener(v) {
+      _this.ps[1 - i].cancel();
+      _this.ps[1 - i] =
+        _this.promiseFilter(
+          _this.promiseFactory()
+              .then(_this.listen(1 - i))
+        );
 
-			return v;
-  	};
+      return v;
+    };
   };
 
 }
@@ -7295,17 +7295,17 @@ module.exports = PromiseListener;
 class DomContainerView {
 
   constructor(id) {
-		this.id = id;
+    this.id = id;
   }
 
-	/* Create the container DOM element and store. */
+  /* Create the container DOM element and store. */
   install() {
     this.container = document.createElement('div');
     this.container.id = this.id;
     document.body.appendChild(this.container);
   }
 
-	/* Set HTML inside container. */
+  /* Set HTML inside container. */
   setContent(content) {
     this.container.innerHTML = content;
   }

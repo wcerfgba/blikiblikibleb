@@ -11,36 +11,36 @@ let Promise = require('bluebird');
 
 class UrlFragmentListener {
 
-	constructor(fragmentChangeInterval = 200) {
-  	this.fragmentChangeInterval = fragmentChangeInterval;
-	}
+  constructor(fragmentChangeInterval = 200) {
+    this.fragmentChangeInterval = fragmentChangeInterval;
+  }
   
   getFragment() {
     return window.location.hash.substr(1);
   }
 
-	/* Return a promise which resolves when the fragment changes. Store the
-	 * fragment at creation time and poll for changes, resolving on change.
-	 */
+  /* Return a promise which resolves when the fragment changes. Store the
+   * fragment at creation time and poll for changes, resolving on change.
+   */
   onFragmentChange() {
     return new Promise( (resolve, reject) => {
       let prev = this.getFragment();
       let timer = setInterval( () => {
-      	let curr = this.getFragment();
-      	if ( prev !== curr ) {
-        	// When we detect a fragment change, we can clear this timeout as
-        	// there is no need to watch the URL fragment any more, and resolve
-        	// the promise with the value.
-        	clearTimeout(timer);
-        	resolve(curr);
-      	}
+        let curr = this.getFragment();
+        if ( prev !== curr ) {
+          // When we detect a fragment change, we can clear this timeout as
+          // there is no need to watch the URL fragment any more, and resolve
+          // the promise with the value.
+          clearTimeout(timer);
+          resolve(curr);
+        }
       }, this.fragmentChangeInterval);
-  	});
-	}
+    });
+  }
 
-	getRoute() { return this.getFragment(); }
+  getRoute() { return this.getFragment(); }
 
-	onRouteChange() { return this.onFragmentChange(); }
+  onRouteChange() { return this.onFragmentChange(); }
 
 }
 

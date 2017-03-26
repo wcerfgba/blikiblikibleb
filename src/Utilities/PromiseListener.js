@@ -20,8 +20,8 @@ class PromiseListener {
     
     this.ps = [
       this.promiseFilter(
-      	this.promiseFactory()
-      			.then(this.listen(0))
+        this.promiseFactory()
+            .then(this.listen(0))
       ),
       Promise.resolve()
     ];
@@ -34,16 +34,16 @@ class PromiseListener {
   listen(i) {
     let _this = this;
     
-		return function listener(v) {
-  		_this.ps[1 - i].cancel();
-  		_this.ps[1 - i] =
-  			_this.promiseFilter(
-  				_this.promiseFactory()
-  						.then(_this.listen(1 - i))
-  			);
+    return function listener(v) {
+      _this.ps[1 - i].cancel();
+      _this.ps[1 - i] =
+        _this.promiseFilter(
+          _this.promiseFactory()
+              .then(_this.listen(1 - i))
+        );
 
-			return v;
-  	};
+      return v;
+    };
   };
 
 }

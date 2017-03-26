@@ -12,17 +12,17 @@ class XhrRepository {
     let _this = this;
     
     return new Promise( function retrievePromise(resolve, reject, onCancel) {
-    	var req = new XMLHttpRequest();
-    	req.addEventListener(
-    		'load',
-    		function () {
-      		return resolve(this.responseText);
-      	}
+      var req = new XMLHttpRequest();
+      req.addEventListener(
+        'load',
+        function () {
+          return resolve(this.responseText);
+        }
       );
       // Transform document name into URL.
-    	req.open("GET", _this.nameFilter(name));
-    	req.send();
-  	});
+      req.open("GET", _this.nameFilter(name));
+      req.send();
+    });
   }
 
 }
