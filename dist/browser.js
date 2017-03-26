@@ -181,31 +181,53 @@ process.chdir = function (dir) {
 process.umask = function() { return 0; };
 
 },{}],2:[function(require,module,exports){
+/*
+ * Browser-side version of BlikiBlikiBleb. Listens for changes on the URL
+ * fragment and loads and renders Markdown from the server.
+ */
+
+
+// Core dependencies
 let Promise = require('bluebird');
 let PromiseListener = require('../src/Utilities/PromiseListener.js');
 
+
+// Local dependencies
 let Router = require('../src/Router/UrlFragmentListener');
 let XhrRepository = require('../src/Repository/XhrRepository');
 let renderer = require('../src/Renderer/MarkdownRenderer');
 let DomContainerView = require('../src/View/DomContainerView');
 
 
+// App components
 let router = new Router();
 let repository = new XhrRepository( (name) => `/assets/pages/${name}.md` );
 let view = new DomContainerView('blikiblikibleb');
 
 
+// The app, as a decorator of promises.
+// Methods are wrapped in functions to preserve object ownership.
+let app = (p) => {
+	return p.then( (name) => repository.retrieve(name) )
+					.then( (doc) => renderer.render(doc) )
+					.then( (render) => view.setContent(render) );
+}
+
+
+// Init
+
 view.install();
 
+// Subscribe to route change promises.
 let listener =
 	new PromiseListener(
 		() => router.onRouteChange(),
-		(p) => {
-			return p.then( (name) => repository.retrieve(name) )
-							.then( (doc) => renderer.render(doc) )
-							.then( (render) => view.setContent(render) );
-		}
+		app
 	);
+
+
+// Load the index.
+app( Promise.resolve('index') );
 
 },{"../src/Renderer/MarkdownRenderer":5,"../src/Repository/XhrRepository":6,"../src/Router/UrlFragmentListener":7,"../src/Utilities/PromiseListener.js":8,"../src/View/DomContainerView":9,"bluebird":3}],3:[function(require,module,exports){
 (function (process,global){
@@ -7122,6 +7144,10 @@ if (typeof module !== 'undefined' && typeof exports === 'object') {
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
 },{}],5:[function(require,module,exports){
+/* The Markdown renderer implements the IRenderer interface and uses the
+ * marked library for both client- and server-side rendering.
+ */
+
 let marked = require('marked');
 
 module.exports = {
@@ -7129,6 +7155,10 @@ module.exports = {
 };
 
 },{"marked":4}],6:[function(require,module,exports){
+/* An XhrRepository allows you to retrieve data using a XMLHttpRequest as a
+ * promise, using a function to turn a name for a document in the repository
+ * in to a URL. */
+
 class XhrRepository {
 
   constructor(nameFilter) {
@@ -7146,6 +7176,7 @@ class XhrRepository {
       		return resolve(this.responseText);
       	}
       );
+      // Transform document name into URL.
     	req.open("GET", _this.nameFilter(name));
     	req.send();
   	});
@@ -7159,6 +7190,14 @@ module.exports = XhrRepository;
 let Promise = require('bluebird');
 
 
+/* A UrlFragmentListener acts like an IRouter to permit subscribing to changes
+ * of the window URL fragment. It does this by providing a promise that
+ * resolves with the new value of the fragment (sans hash) on change.
+ *
+ * The present implementation relies on a setInterval to poll the URL fragment
+ * at regular intervals, which may change in the future.
+ */
+
 class UrlFragmentListener {
 
 	constructor(fragmentChangeInterval = 200) {
@@ -7169,13 +7208,18 @@ class UrlFragmentListener {
     return window.location.hash.substr(1);
   }
 
-
+	/* Return a promise which resolves when the fragment changes. Store the
+	 * fragment at creation time and poll for changes, resolving on change.
+	 */
   onFragmentChange() {
     return new Promise( (resolve, reject) => {
       let prev = this.getFragment();
       let timer = setInterval( () => {
       	let curr = this.getFragment();
       	if ( prev !== curr ) {
+        	// When we detect a fragment change, we can clear this timeout as
+        	// there is no need to watch the URL fragment any more, and resolve
+        	// the promise with the value.
         	clearTimeout(timer);
         	resolve(curr);
       	}
@@ -7198,6 +7242,15 @@ let Promise = require('bluebird');
 Promise.config({ cancellable: true });
 
 
+/* A PromiseListener takes a promise-returning function and a callback and
+ * sets up two 'threads' of promises. When one promise resolves, the other
+ * promise is cancelled and reconstructed. There is always one unfulfilled
+ * promise, and when that promise is fulfilled it cancels the other one and
+ * pre-empts it.
+ *
+ * Useful for subscribing to a stream of instances of the same event.
+ */
+
 class PromiseListener {
 
   constructor(promiseFactory, promiseFilter) {
@@ -7213,12 +7266,14 @@ class PromiseListener {
     ];
   }
 
+  /* This is where the magic happens. We take the raw promise from the factory
+   * and add this handler. When the promise resolves, we cancel the other
+   * promise and set it up just like this one.
+   */
   listen(i) {
     let _this = this;
     
 		return function listener(v) {
-  		// let q = _this.ps[1 - i]; by reference
-
   		_this.ps[1 - i].cancel();
   		_this.ps[1 - i] =
   			_this.promiseFilter(
@@ -7235,18 +7290,22 @@ class PromiseListener {
 module.exports = PromiseListener;
 
 },{"bluebird":3}],9:[function(require,module,exports){
+/* A view as a div in the document. */
+
 class DomContainerView {
 
   constructor(id) {
 		this.id = id;
   }
 
+	/* Create the container DOM element and store. */
   install() {
     this.container = document.createElement('div');
     this.container.id = this.id;
     document.body.appendChild(this.container);
   }
 
+	/* Set HTML inside container. */
   setContent(content) {
     this.container.innerHTML = content;
   }
