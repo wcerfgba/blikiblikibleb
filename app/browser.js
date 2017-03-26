@@ -10,14 +10,14 @@ let PromiseListener = require('../src/Utilities/PromiseListener.js');
 
 
 // Local dependencies
-let Router = require('../src/Router/UrlFragmentListener');
+let Router = require('../src/Router/QueryStringParameterListener');
 let XhrRepository = require('../src/Repository/XhrRepository');
 let renderer = require('../src/Renderer/BlikiBlikiMarkdownRenderer');
 let DomContainerView = require('../src/View/DomContainerView');
 
 
 // App components
-let router = new Router();
+let router = new Router('bbb_page');
 let repository = new XhrRepository( (name) => `assets/pages/${name}.md` );
 let view = new DomContainerView('blikiblikibleb');
 

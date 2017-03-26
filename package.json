@@ -20,6 +20,7 @@
   "homepage": "https://github.com/wcerfgba/blikiblikibleb#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "marked": "^0.3.6"
+    "marked": "^0.3.6",
+    "qs": "^6.4.0"
   }
 }

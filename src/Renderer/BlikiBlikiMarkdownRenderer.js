@@ -9,7 +9,7 @@ let camelCaseLinks = (md) => {
 
   return md.replace(
     /(\s+)\[(\w+)\](\s+)/g,
-    '$1[$2](#$2)$3'
+    '$1[$2](?bbb_page=$2)$3'
   );
 
 };
