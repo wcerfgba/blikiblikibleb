@@ -43,5 +43,6 @@ let listener =
   );
 
 
-// Load the index.
-app( Promise.resolve('index') );
+// Load the initial hash (or index).
+let landing = router.getRoute() ? router.getRoute() : 'index';
+app( Promise.resolve( landing ) );
